@@ -7,7 +7,7 @@
   height: 150px;
   display: flex;
   flex-wrap: wrap;
-  background-color: blanchedalmond;
+  background-color: blueviolet;
   margin: 20px;
 }
 
@@ -21,7 +21,7 @@
   height: 150px;
   display: flex;
   flex-wrap: wrap;
-  background-color: gold;
+  background-color: greenyellow;
   margin: 20px;
 }
 
@@ -29,5 +29,50 @@
   width: 400px;
   height: 400px;
   margin: 20px;
-  background-color: yellow;
+  background-color: turquoise;
+}
+
+.destroyer-container {
+  width: 80px;
+  height: 40px;
+  background-color: orange;
+  margin: 10px;
+  display: flex;
+}
+
+.submarine-container {
+  width: 120px;
+  height: 40px;
+  background-color: pink;
+  margin: 10px;
+  display: flex;
+}
+
+.cruiser-container {
+  width: 120px;
+  height: 40px;
+  background-color: purple;
+  margin: 10px;
+  display: flex;
+}
+
+.battleship-container {
+  width: 160px;
+  height: 40px;
+  background-color: azure;
+  margin: 10px;
+  display: flex;
+}
+
+.carrier-container {
+  width: 160px;
+  height: 40px;
+  background-color: green;
+  margin: 10px;
+  display: flex;
+}
+
+.ship div {
+  width: 40px;
+  height: 40px;
 }

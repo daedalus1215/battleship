@@ -16,8 +16,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoDisplay = document.querySelector('#info');
 
 
-    destroyer.onclickListener(() => {
-        destroyer.backgroundColor(blue);
-    });
-
 });

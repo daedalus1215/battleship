@@ -3,8 +3,8 @@
 }
 
 .grid-user {
-  width: 150px;
-  height: 150px;
+  width: 400px;
+  height: 400px;
   display: flex;
   flex-wrap: wrap;
   background-color: blueviolet;
@@ -17,8 +17,8 @@
 }
 
 .grid-computer {
-  width: 150px;
-  height: 150px;
+  width: 400px;
+  height: 400px;
   display: flex;
   flex-wrap: wrap;
   background-color: greenyellow;
@@ -75,4 +75,8 @@
 .ship div {
   width: 40px;
   height: 40px;
+}
+
+.destroyer {
+  background-color: yellow;
 }

@@ -89,4 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     generateShip(ships[0], computerSquares);
+    generateShip(ships[1], computerSquares);
+    generateShip(ships[2], computerSquares);
+    generateShip(ships[3], computerSquares);
+    generateShip(ships[4], computerSquares);
 });         

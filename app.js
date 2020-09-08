@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const battleship = document.querySelector('.battleship-container');
     const carrier = document.querySelector('.carrier-container');
 
-    const start = document.querySelector('#start');
-    const rotate = document.querySelector('#rotate');
+    const startButton = document.querySelector('#start');
+    const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
 
@@ -93,4 +93,29 @@ document.addEventListener('DOMContentLoaded', () => {
     generateShip(ships[2], computerSquares);
     generateShip(ships[3], computerSquares);
     generateShip(ships[4], computerSquares);
-});         
+
+    isHorizontal = true;
+
+    const rotate = () => {
+        if (isHorizontal) {
+            destroyer.classList.toggle('destroyer-container-vertical');
+            submarine.classList.toggle('submarine-container-vertical');
+            cruiser.classList.toggle('cruiser-container-vertical');
+            battleship.classList.toggle('battleship-container-vertical');
+            carrier.classList.toggle('carrier-container-vertical');
+            isHorizontal = false;
+            return
+        }
+        if (!isHorizontal) {
+            destroyer.classList.toggle('destroyer-container-vertical');
+            submarine.classList.toggle('submarine-container-vertical');
+            cruiser.classList.toggle('cruiser-container-vertical');
+            battleship.classList.toggle('battleship-container-vertical');
+            carrier.classList.toggle('carrier-container-vertical');
+            isHorizontal = true;
+            return
+        }
+    }
+
+    rotateButton.addEventListener('click', rotate)
+}); 

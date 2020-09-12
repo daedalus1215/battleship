@@ -202,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     userSquares.forEach(square => square.addEventListener('dragend', dragEnd));
 
 
+
     // game logic
     const playGame = () => {
         if (isGameOver) return;
@@ -213,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (currentPlayer === 'computer') {
             turnDisplay.innerHTML = 'Computers Go'
+            setTimeout(computerGo, 2000);
         }
     }
 
@@ -225,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let carrierCount = 0;
 
     const revealSquare = square => {
+        if (square.classList.contains('boom') || square.classList.contains('miss')) return;
         if (square.classList.contains('destroyer')) destroyerCount++;
         if (square.classList.contains('submarine')) submarineCount++;
         if (square.classList.contains('cruiser')) cruiserCount++;
@@ -233,8 +236,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (square.classList.contains('taken')) {
             square.classList.add('boom');
+        } else {
+            square.classList.add('miss');
         }
+        currentPlayer = 'computer';
+        turnDisplay.innerHTML = 'Computers Go';
+
     };
 
+    let cpuDestroyerCount = 0;
+    let cpuSubmarineCount = 0;
+    let cpuCruiserCount = 0;
+    let cpuBattleshipCount = 0;
+    let cpuCarrierCount = 0;
+
+    const computerGo = () => {
+        let random = Math.floor(Math.random() * userSquares.length);
+        if (!userSquares[random].classList.contains('boom')) {
+            if (userSquares[random].classList.contains('destroyer')) cpuDestroyerCount++;
+            if (userSquares[random].classList.contains('submarine')) cpuSubmarineCount++;
+            if (userSquares[random].classList.contains('cruiser')) cpuCruiserCount++;
+            if (userSquares[random].classList.contains('battleship')) cpuBattleshipCount++;
+            if (userSquares[random].classList.contains('carrier')) cpuCarrierCount++;
+            if (userSquares[random].classList.contains('taken')) {
+                userSquares[random].classList.add('boom');
+            } else {
+                userSquares[random].classList.add('miss');
+            }
+        } else {
+            computerGo();
+        }
+
+        currentPlayer = 'user';
+        turnDisplay.innerHTML = 'Your Go';
+    }
 
 }); 

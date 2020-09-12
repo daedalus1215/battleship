@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const computerGrid = document.querySelector('.grid-computer');
     const displayGrid = document.querySelector('.grid-display');
 
-    const generalShips = document.querySelector('.ship');
+    const allShips = document.querySelectorAll('.ship');
     const destroyer = document.querySelector('.destroyer-container');
     const submarine = document.querySelector('.submarine-container');
     const cruiser = document.querySelector('.cruiser-container');
@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
-
+    // game logic
+    let isGameOver = false;
+    let currentPlayer = 'user';
 
     const width = 10;
     const ships = [
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const computerSquares = createBoard(computerGrid);
 
     const generateShip = (ship, computerSquares) => {
-        let randomDirection = Math.floor(Math.random() * ship.directions.length);
+        let randomDirection = Math.abs(Math.floor(Math.random() * ship.directions.length));
         let current = ship.directions[randomDirection];
 
         if (randomDirection === 0) direction = 1;
@@ -118,4 +120,121 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     rotateButton.addEventListener('click', rotate)
+
+
+
+
+
+    let selectedShipNameWithIndex;
+    let draggedShip;
+    let draggedShipLength;
+
+    allShips
+        .forEach(ship => ship.addEventListener('mousedown', e => selectedShipNameWithIndex = e.target.id));
+
+    const dragStart = e => {
+        draggedShip = e.target;
+        draggedShipLength = e.target.childNodes.length;
+        console.log('dragStart:')
+        console.log('draggedShip: ', draggedShip)
+        console.log('draggedShipLength: ', draggedShipLength)
+    };
+    const dragOver = e => {
+        e.preventDefault();
+    };
+    const dragEnter = e => {
+        e.preventDefault();
+    };
+    const dragLeave = e => {
+        console.log('dragLeave')
+    };
+    const dragDrop = e => {
+        e.preventDefault();
+        console.log('dragDrop');
+        let shipNameWithLastId = draggedShip.lastChild.id;
+
+        let shipName = shipNameWithLastId.slice(0, -2); // just get the ship's name
+        console.log('Ship Name: ', shipName);
+
+        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1));
+        console.log('last ship index: ', lastShipIndex);
+        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id);
+        console.log('ship last id: ', shipLastId);
+        const notAllowedHorizontal = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 2, 12, 22, 32, 42, 52, 62, 72, 82, 92, 3, 13, 23, 33, 43, 53, 63, 73, 83, 93];
+        const newNotAllowedHorizontal = notAllowedHorizontal.splice(0, 10 * lastShipIndex);
+        const notAllowedVertical = [99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60];
+        const newNotAllowedVertical = notAllowedVertical.splice(0, 10 * lastShipIndex);
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
+        console.log('Selected Ship Index: ', selectedShipIndex);
+
+        shipLastId = shipLastId - selectedShipIndex;
+        console.log('ship last id: ', shipLastId);
+
+        if (isHorizontal && !newNotAllowedHorizontal.includes(shipLastId)) {
+            Array(draggedShipLength).fill()
+                .map((_, iteration) => {
+                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
+                    userSquares[newLocation].classList.add('taken', shipName);
+                })
+        } else if (!isHorizontal && !newNotAllowedVertical.includes(shipLastId)) {
+            Array(draggedShipLength).fill()
+                .map((_, iteration) => {
+                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
+                    userSquares[newLocation].classList.add('taken', shipName);
+                });
+        } else return
+
+        displayGrid.removeChild(draggedShip);
+
+    };
+
+    const dragEnd = e => {
+
+    };
+
+
+    allShips.forEach(ship => ship.addEventListener('dragstart', dragStart));
+    userSquares.forEach(square => square.addEventListener('dragstart', dragStart));
+    userSquares.forEach(square => square.addEventListener('dragover', dragOver));
+    userSquares.forEach(square => square.addEventListener('dragenter', dragEnter));
+    userSquares.forEach(square => square.addEventListener('dragleave', dragLeave));
+    userSquares.forEach(square => square.addEventListener('drop', dragDrop));
+    userSquares.forEach(square => square.addEventListener('dragend', dragEnd));
+
+
+    // game logic
+    const playGame = () => {
+        if (isGameOver) return;
+        if (currentPlayer === 'user') {
+            turnDisplay.innerHTML = 'Your Go';
+            computerSquares.forEach(square => square.addEventListener('click', (e) => {
+                revealSquare(square);
+            }))
+        }
+        if (currentPlayer === 'computer') {
+            turnDisplay.innerHTML = 'Computers Go'
+        }
+    }
+
+    startButton.addEventListener('click', playGame);
+
+    let destroyerCount = 0;
+    let submarineCount = 0;
+    let cruiserCount = 0;
+    let battleshipCount = 0;
+    let carrierCount = 0;
+
+    const revealSquare = square => {
+        if (square.classList.contains('destroyer')) destroyerCount++;
+        if (square.classList.contains('submarine')) submarineCount++;
+        if (square.classList.contains('cruiser')) cruiserCount++;
+        if (square.classList.contains('battleship')) battleshipCount++;
+        if (square.classList.contains('carrier')) carrierCount++;
+
+        if (square.classList.contains('taken')) {
+            square.classList.add('boom');
+        }
+    };
+
+
 }); 

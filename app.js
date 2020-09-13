@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         currentPlayer = 'computer';
         turnDisplay.innerHTML = 'Computers Go';
-
+        computerGo();
     };
 
     let cpuDestroyerCount = 0;
@@ -269,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentPlayer = 'user';
         turnDisplay.innerHTML = 'Your Go';
+        playGame();
     }
 
 }); 

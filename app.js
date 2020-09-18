@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             name: 'carrier',
             directions: [
-                [0, 1, 2],
+                [0, 1, 2, 3, 4],
                 [0, width, width * 2, width * 3, width * 4]
             ]
         }
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (currentPlayer === 'computer') {
             turnDisplay.innerHTML = 'Computers Go'
-            setTimeout(computerGo, 2000);
+            setTimeout(computerGo, 500);
         }
     }
 
@@ -263,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 userSquares[random].classList.add('miss');
             }
+            checkForWins();
         } else {
             computerGo();
         }
@@ -316,6 +317,19 @@ document.addEventListener('DOMContentLoaded', () => {
             cpuCarrierCount = 10;
         }
 
+        if ((destroyerCount + submarineCount + cruiserCount + battleshipCount + carrierCount) === 50) {
+            infoDisplay.innerHTML = "You win"
+            gameOver();
+        }
+        if ((cpuDestroyerCount + cpuSubmarineCount + cpuCruiserCount + cpuBattleshipCount + cpuCarrierCount) === 50) {
+            infoDisplay.innerHTML = "Computer win"
+            gameOver();
+        }
     };
+
+    const gameOver = () => {
+        isGameOver = true;
+        startButton.removeEventListener('click', playGame);
+    }
 
 }); 

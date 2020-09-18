@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         currentPlayer = 'computer';
         turnDisplay.innerHTML = 'Computers Go';
-        computerGo();
+        playGame();
     };
 
     let cpuDestroyerCount = 0;
@@ -271,5 +271,51 @@ document.addEventListener('DOMContentLoaded', () => {
         turnDisplay.innerHTML = 'Your Go';
         playGame();
     }
+
+
+    const checkForWins = () => {
+        if (destroyerCount === 2) {
+            infoDisplay.innerHTML = "You sunk the computers destroyer"
+            destroyerCount = 10;
+        }
+        if (submarineCount === 3) {
+            infoDisplay.innerHTML = "You sunk the computers submarine"
+            submarineCount = 10;
+        }
+        if (cruiserCount === 3) {
+            infoDisplay.innerHTML = "You sunk the computers cruiser"
+            cruiserCount = 10;
+        }
+        if (battleshipCount === 4) {
+            infoDisplay.innerHTML = "You sunk the computers battleship"
+            battleshipCount = 10;
+        }
+        if (carrierCount === 5) {
+            infoDisplay.innerHTML = "You sunk the computers carrier"
+            carrierCount = 10;
+        }
+
+        if (cpuDestroyerCount === 2) {
+            infoDisplay.innerHTML = "Cpu sunk your destroyer"
+            cpuDestroyerCount = 10;
+        }
+        if (cpuSubmarineCount === 3) {
+            infoDisplay.innerHTML = "Cpu sunk your submarine"
+            cpuSubmarineCount = 10;
+        }
+        if (cpuCruiserCount === 3) {
+            infoDisplay.innerHTML = "Cpu sunk your cruiser"
+            cpuCruiserCount = 10;
+        }
+        if (cpuBattleshipCount === 4) {
+            infoDisplay.innerHTML = "Cpu sunk your battleship"
+            cpuBattleshipCount = 10;
+        }
+        if (cpuCarrierCount === 5) {
+            infoDisplay.innerHTML = "Cpu sunk your carrier"
+            cpuCarrierCount = 10;
+        }
+
+    };
 
 }); 

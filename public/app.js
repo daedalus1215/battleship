@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPlayer = 'user';
 
     const width = 10;
+
+    const socket = io();
+
+
     const ships = [
         {
             name: 'destroyer',

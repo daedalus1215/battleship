@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
+    const singlePlayerButtom = document.querySelector('#singlePlayerButton');
+    const multiPlayerButton = document.querySelector('#multiPlayerButton');
+
     // game logic
     let isGameOver = false;
     let currentPlayer = 'user';
@@ -25,6 +28,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let enemyReady = false;
     let allShipsPlaced = false;
     let shotFired = -1;
+
+
+    // Select Player Mode
+    singlePlayerButtom.addEventListener("click", () => {
+        gameMode = "singlePlayer";
+
+        generateShip(ships[0], computerSquares);
+        generateShip(ships[1], computerSquares);
+        generateShip(ships[2], computerSquares);
+        generateShip(ships[3], computerSquares);
+        generateShip(ships[4], computerSquares);
+
+        startButton.addEventListener('click', playGame);
+    });
+
+    multiPlayerButton.addEventListener("click", () => {
+
+    });
+
+
+
 
     const socket = io();
 
@@ -109,12 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isTaken && !isAtRightEdge && !isAtLeftEdge) current.forEach(index => squares[randomStart + index].classList.add('taken', ship.name));
         else generateShip(ship, squares);
     };
-
-    generateShip(ships[0], computerSquares);
-    generateShip(ships[1], computerSquares);
-    generateShip(ships[2], computerSquares);
-    generateShip(ships[3], computerSquares);
-    generateShip(ships[4], computerSquares);
 
     isHorizontal = true;
 
@@ -237,8 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(computerGo, 500);
         }
     }
-
-    startButton.addEventListener('click', playGame);
 
     let destroyerCount = 0;
     let submarineCount = 0;

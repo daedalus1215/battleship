@@ -19,9 +19,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPlayer = 'user';
 
     const width = 10;
+    let gameMode = "";
+    let playerNum = 0;
+    let ready = false;
+    let enemyReady = false;
+    let allShipsPlaced = false;
+    let shotFired = -1;
 
     const socket = io();
 
+    // Get your player number
+    socket.on('player-number', number => {
+        if (number === -1) {
+            infoDisplay.innerHTML = "Sorry, the server is full";
+        } else {
+            playerNum = parseInt(number);
+            if (playerNum === 1) currentPlayer = "enemy";
+            console.log(playerNum);
+        }
+    })
 
     const ships = [
         {

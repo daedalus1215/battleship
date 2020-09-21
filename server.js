@@ -3,6 +3,7 @@ const path = require('path');
 const http = require('http');
 const PORT = process.env.PORT || 4000;
 const socketio = require('socket.io');
+const { connect } = require('http2');
 
 
 const app = express();
@@ -22,13 +23,13 @@ io.on('connection', socket => {
     // console.log('New WS Connection');
     // Find an available player number
     let playerIndex = -1;
-    Array(connections).fill()
-        .map((_, i) => {
-            if (connections[i] === null) {
-                playerIndex = i;
-                return
-            }
-        })
+    for (const i in connections) {
+        if (connections[i] === null) {
+            playerIndex = i;
+            break;
+
+        }
+    }
 
     // tell the connecting client what player number they are 
     socket.emit('player-number', playerIndex);
@@ -37,4 +38,9 @@ io.on('connection', socket => {
 
     // ignore player 3
     if (playerIndex === -1) return;
+
+    connections[playerIndex] = false; // player is not ready
+
+    // Tell everyone what player number just connected
+    socket.broadcast.emit('player-connection', playerIndex);
 })

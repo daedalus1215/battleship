@@ -44,24 +44,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     multiPlayerButton.addEventListener("click", () => {
+        gameMode = "multiPlayer";
 
+        const socket = io();
+
+        // Get your player number
+        socket.on('player-number', number => {
+            if (number === -1) {
+                infoDisplay.innerHTML = "Sorry, the server is full";
+            } else {
+                playerNum = parseInt(number);
+                if (playerNum === 1) currentPlayer = "enemy";
+                console.log(playerNum);
+            }
+        });
+
+        // Another player has connected or disconnected
+        socket.on('player-connection', num => {
+            console.log(`Player number ${num} has connected or disconnected`);
+        })
     });
-
-
-
-
-    const socket = io();
-
-    // Get your player number
-    socket.on('player-number', number => {
-        if (number === -1) {
-            infoDisplay.innerHTML = "Sorry, the server is full";
-        } else {
-            playerNum = parseInt(number);
-            if (playerNum === 1) currentPlayer = "enemy";
-            console.log(playerNum);
-        }
-    })
 
     const ships = [
         {

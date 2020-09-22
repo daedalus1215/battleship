@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Get your player number
         socket.on('player-number', number => {
+            console.log('app.js ', 'player-number socket');
             if (number === -1) {
                 infoDisplay.innerHTML = "Sorry, the server is full";
             } else {
@@ -60,9 +61,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Another player has connected or disconnected
+        const playerConnectedOrDisconnected = (num) => {
+            // look for the 'p' class, (player 0 = 1; player 1 = 2)
+            let player = `.p${parseInt(num) + 1}`;
+            document.querySelector(`${player} .connected span`).classList.toggle('green');
+            // if the player that is connecting is us...
+            if (parseInt(num) === playerNum)
+                document.querySelector(player).getElementsByClassName.fontWeight = 'bold';
+        }
+        
         socket.on('player-connection', num => {
+            console.log('app.js ', 'player-connection socket');
             console.log(`Player number ${num} has connected or disconnected`);
-        })
+            playerConnectedOrDisconnected(num);
+        });
     });
 
     const ships = [

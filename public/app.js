@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
-    const singlePlayerButtom = document.querySelector('#singlePlayerButton');
+    const singlePlayerButton = document.querySelector('#singlePlayerButton');
     const multiPlayerButton = document.querySelector('#multiPlayerButton');
 
     // game logic
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Select Player Mode
-    singlePlayerButtom.addEventListener("click", () => {
+    singlePlayerButton.addEventListener("click", () => {
         gameMode = "singlePlayer";
 
         generateShip(ships[0], computerSquares);
@@ -57,7 +57,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 playerNum = parseInt(number);
                 if (playerNum === 1) currentPlayer = "enemy";
                 console.log(playerNum);
+                // when we connect, are there any other players here?
+                socket.emit('check-players');
             }
+
+        });
+
+        socket.on('player-connection', num => {
+            console.log('app.js ', 'player-connection socket');
+            console.log(`Player number ${num} has connected or disconnected`);
+            playerConnectedOrDisconnected(num);
+        });
+
+        startButton.addEventListener('click', () => {
+            if (allShipsPlaced) playGameMulti(socket);
+            else infoDisplay.innerHTML = "Please place all ships";
+        });
+
+        socket.on('enemy-ready', playerIndex => {
+            enemyReady = true;
+            playerReady = playerIndex;
+            if (ready) playGameMulti(socket);
+        })
+
+        socket.on('check-players', players => {
+            players.forEach((player, index) => {
+                if (player.connected) playerConnectedOrDisconnected(index);
+                if (player.ready) {
+                    playerReady(index);
+                    if (index !== playerReady) enemyReady = true;
+                }
+            });
         });
 
         // Another player has connected or disconnected
@@ -69,13 +99,29 @@ document.addEventListener('DOMContentLoaded', () => {
             if (parseInt(num) === playerNum)
                 document.querySelector(player).getElementsByClassName.fontWeight = 'bold';
         }
-        
-        socket.on('player-connection', num => {
-            console.log('app.js ', 'player-connection socket');
-            console.log(`Player number ${num} has connected or disconnected`);
-            playerConnectedOrDisconnected(num);
-        });
     });
+
+    const playGameMulti = (socket) => {
+        if (isGameOver) return;
+        if (!ready) {
+            socket.emit('player-ready');
+            ready = true;
+            playerReady(playerNum)
+        }
+        if (enemyReady) {
+            if (currentPlayer === 'user') {
+                turnDisplay.innerHTML = 'Your Go';
+            }
+            if (currentPlayer === 'enemy') {
+                turnDisplay.innerHTML = "Enemy's Go";
+            }
+        }
+    };
+
+    const playerReady = num => {
+        let player = `.p${parseInt(num) + 1}`
+        document.querySelector(`${player} .ready .span`).classList.toggle('green');
+    }
 
     const ships = [
         {
@@ -238,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         displayGrid.removeChild(draggedShip);
 
+        if (!displayGrid.querySelector('.ship')) allShipsPlaced = true;
     };
 
     const dragEnd = e => {

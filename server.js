@@ -52,4 +52,20 @@ io.on('connection', socket => {
         // Tell everyone what player number just disconnected.
         socket.broadcast.emit('player-connection', playerIndex);
     })
+
+    socket.on('player-ready', () => {
+        socket.broadcast.emit('enemy-ready', playerIndex);
+        connections[playerIndex] = true;
+    })
+
+    // check player connections
+    socket.on('check-players', () => {
+        const players = [];
+        for (const i in connections) {
+            (connections[i] === null)
+                ? players.push({ connected: false, ready: false })
+                : players.push({ connected: true, ready: connections[i] });
+        }
+        socket.emit('check-players', players);
+    });
 })

@@ -363,23 +363,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let cpuBattleshipCount = 0;
     let cpuCarrierCount = 0;
 
-    const enemyGo = () => {
-        let random = Math.floor(Math.random() * userSquares.length);
-        if (!userSquares[random].classList.contains('boom')) {
-            if (userSquares[random].classList.contains('destroyer')) cpuDestroyerCount++;
-            if (userSquares[random].classList.contains('submarine')) cpuSubmarineCount++;
-            if (userSquares[random].classList.contains('cruiser')) cpuCruiserCount++;
-            if (userSquares[random].classList.contains('battleship')) cpuBattleshipCount++;
-            if (userSquares[random].classList.contains('carrier')) cpuCarrierCount++;
-            if (userSquares[random].classList.contains('taken')) {
-                userSquares[random].classList.add('boom');
+    const enemyGo = (square) => {
+        if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length);
+        if (!userSquares[square].classList.contains('boom')) {
+            if (userSquares[square].classList.contains('destroyer')) cpuDestroyerCount++;
+            if (userSquares[square].classList.contains('submarine')) cpuSubmarineCount++;
+            if (userSquares[square].classList.contains('cruiser')) cpuCruiserCount++;
+            if (userSquares[square].classList.contains('battleship')) cpuBattleshipCount++;
+            if (userSquares[square].classList.contains('carrier')) cpuCarrierCount++;
+            if (userSquares[square].classList.contains('taken')) {
+                userSquares[square].classList.add('boom');
             } else {
-                userSquares[random].classList.add('miss');
+                userSquares[square].classList.add('miss');
             }
             checkForWins();
-        } else {
-            enemyGo();
-        }
+        } else if (gameMode === 'singlePlayer') enemyGo();
 
         currentPlayer = 'user';
         turnDisplay.innerHTML = 'Your Go';

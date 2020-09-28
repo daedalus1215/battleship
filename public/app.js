@@ -74,6 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
             else infoDisplay.innerHTML = "Please place all ships";
         });
 
+        computerSquares.forEach(square => {
+            square.addEventListener('click', () => {
+                if (currentPlayer === user && ready && enemyReady) {
+                    shotFired = square.dataset.id;
+                    socket.emit('fire', shotFired);
+                } 
+            })
+        });
+
         socket.on('enemy-ready', playerIndex => {
             enemyReady = true;
             playerReady = playerIndex;

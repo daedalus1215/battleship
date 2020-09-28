@@ -83,6 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         });
 
+        socket.on('fire', id => {
+            enemyGo(id);
+            const square = userSquares[id];
+            socket.on('fire-reply', square.classList);
+            playGameMulti(socket);
+        });
+
         socket.on('enemy-ready', playerIndex => {
             enemyReady = true;
             playerReady = playerIndex;
@@ -322,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (currentPlayer === 'computer') {
             turnDisplay.innerHTML = 'Computers Go'
-            setTimeout(computerGo, 500);
+            setTimeout(enemyGo, 500);
         }
     }
 
@@ -356,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cpuBattleshipCount = 0;
     let cpuCarrierCount = 0;
 
-    const computerGo = () => {
+    const enemyGo = () => {
         let random = Math.floor(Math.random() * userSquares.length);
         if (!userSquares[random].classList.contains('boom')) {
             if (userSquares[random].classList.contains('destroyer')) cpuDestroyerCount++;
@@ -371,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             checkForWins();
         } else {
-            computerGo();
+            enemyGo();
         }
 
         currentPlayer = 'user';

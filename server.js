@@ -72,5 +72,10 @@ io.on('connection', socket => {
     socket.on('fire', id => {
         console.log(`shot fired from ${playerIndex} `, id);
         socket.broadcast.emit('fire', id);
-    })
+    });
+
+    socket.on('fire-reply', square => {
+        console.log('square: ', square);
+        socket.broadcast.emit('fire-reply', square);
+    });
 })

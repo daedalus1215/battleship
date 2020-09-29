@@ -78,4 +78,11 @@ io.on('connection', socket => {
         console.log('square: ', square);
         socket.broadcast.emit('fire-reply', square);
     });
+
+    // 10 minute limit per player.
+    setTimeout(() => {
+        connections[playerIndex] = null;
+        socket.emit('timeout');
+        socket.disconnect();
+    }, 60000); 
 })

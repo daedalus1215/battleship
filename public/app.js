@@ -114,6 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        socket.on('timeout', () => {
+            infoDisplay.innerHTML = 'You have reached the 10 minute limit';
+        });
+
         // Another player has connected or disconnected
         const playerConnectedOrDisconnected = (num) => {
             // look for the 'p' class, (player 0 = 1; player 1 = 2)
@@ -457,5 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true;
         startButton.removeEventListener('click', playGame);
     }
+
+
 
 }); 

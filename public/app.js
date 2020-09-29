@@ -90,6 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
             playGameMulti(socket);
         });
 
+        socket.on('fire-reply', classList => {
+            revealSquare(classList);
+            playGameMulti(socket);
+        })
+
         socket.on('enemy-ready', playerIndex => {
             enemyReady = true;
             playerReady = playerIndex;

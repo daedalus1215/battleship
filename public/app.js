@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     shotFired = square.dataset.id;
                     console.log('shots fired ', shotFired);
                     socket.emit('fire', shotFired);
+                    turnDisplay.innerHTML = `${enemy}'s turn`
                 }
             })
         });
@@ -338,11 +339,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentPlayer === CURRENT_PLAYER_TURN) {
             turnDisplay.innerHTML = 'Your Go';
             computerSquares.forEach(square => square.addEventListener('click', (e) => {
+                shotFired = square.dataset.id;
                 revealSquare(square.classList);
             }))
         }
         if (currentPlayer === ENEMY_PLAYER_TURN) {
-            turnDisplay.innerHTML = 'Computers Go'
+            turnDisplay.innerHTML = `${enemy}'s go`
             setTimeout(enemyGo, 500);
         }
     }
@@ -356,15 +358,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealSquare = classList => {
         const enemySquare = computerGrid.querySelector(`div[data-id='${shotFired}']`);
         const obj = Object.values(classList);
-        if(!enemySquare.contains('boom') && currentPlayer === CURRENT_PLAYER_TURN && !isGameOver) {
+        if (!enemySquare.classList.contains('boom') && currentPlayer === CURRENT_PLAYER_TURN && !isGameOver) {
 
+            if (obj.includes('boom') || obj.includes('miss')) return;
+            if (obj.includes('destroyer')) destroyerCount++;
+            if (obj.includes('submarine')) submarineCount++;
+            if (obj.includes('cruiser')) cruiserCount++;
+            if (obj.includes('battleship')) battleshipCount++;
+            if (obj.includes('carrier')) carrierCount++;
         }
-        if (obj.includes('boom') || obj.includes('miss')) return;
-        if (obj.includes('destroyer')) destroyerCount++;
-        if (obj.includes('submarine')) submarineCount++;
-        if (obj.includes('cruiser')) cruiserCount++;
-        if (obj.includes('battleship')) battleshipCount++;
-        if (obj.includes('carrier')) carrierCount++;
 
         if (obj.includes('taken')) {
             enemySquare.classList.add('boom');
@@ -372,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
             enemySquare.classList.add('miss');
         }
         currentPlayer = ENEMY_PLAYER_TURN;
-        turnDisplay.innerHTML = 'Computers Go';
+        turnDisplay.innerHTML = `${enemy}'s Go`;
         if (gameMode === 'singlePlayer') playGame();
     };
 
@@ -399,60 +401,62 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (gameMode === 'singlePlayer') enemyGo();
 
         currentPlayer = CURRENT_PLAYER_TURN;
-        turnDisplay.innerHTML = 'Your Go';
+        turnDisplay.innerHTML = `${enemy}'s Go`;
         playGame();
     }
 
 
     const checkForWins = () => {
+        let enemy = 'computer';
+        if (gameMode === 'multiPlayer') enemy = 'enemy';
         if (destroyerCount === 2) {
-            infoDisplay.innerHTML = "You sunk the computers destroyer"
+            infoDisplay.innerHTML = `You sunk the ${enemy}s destroyer`
             destroyerCount = 10;
         }
         if (submarineCount === 3) {
-            infoDisplay.innerHTML = "You sunk the computers submarine"
+            infoDisplay.innerHTML = `You sunk the ${enemy}s submarine`
             submarineCount = 10;
         }
         if (cruiserCount === 3) {
-            infoDisplay.innerHTML = "You sunk the computers cruiser"
+            infoDisplay.innerHTML = `You sunk the ${enemy}s cruiser`
             cruiserCount = 10;
         }
         if (battleshipCount === 4) {
-            infoDisplay.innerHTML = "You sunk the computers battleship"
+            infoDisplay.innerHTML = `You sunk the ${enemy}s battleship`
             battleshipCount = 10;
         }
         if (carrierCount === 5) {
-            infoDisplay.innerHTML = "You sunk the computers carrier"
+            infoDisplay.innerHTML = `You sunk the ${enemy}s carrier`
             carrierCount = 10;
         }
 
         if (cpuDestroyerCount === 2) {
-            infoDisplay.innerHTML = "Cpu sunk your destroyer"
+            infoDisplay.innerHTML = `${enemy}s sunk your destroyer`
             cpuDestroyerCount = 10;
         }
         if (cpuSubmarineCount === 3) {
-            infoDisplay.innerHTML = "Cpu sunk your submarine"
+            infoDisplay.innerHTML = `${enemy}s sunk your submarine`
             cpuSubmarineCount = 10;
         }
         if (cpuCruiserCount === 3) {
-            infoDisplay.innerHTML = "Cpu sunk your cruiser"
+            infoDisplay.innerHTML = `${enemy}s sunk your cruiser`
             cpuCruiserCount = 10;
         }
         if (cpuBattleshipCount === 4) {
-            infoDisplay.innerHTML = "Cpu sunk your battleship"
+            infoDisplay.innerHTML = `${enemy}s sunk your battleship`
             cpuBattleshipCount = 10;
         }
         if (cpuCarrierCount === 5) {
-            infoDisplay.innerHTML = "Cpu sunk your carrier"
+            infoDisplay.innerHTML = `${enemy}s sunk your carrier`
             cpuCarrierCount = 10;
         }
 
         if ((destroyerCount + submarineCount + cruiserCount + battleshipCount + carrierCount) === 50) {
-            infoDisplay.innerHTML = "You win"
+            infoDisplay.innerHTML = `You win`
             gameOver();
         }
         if ((cpuDestroyerCount + cpuSubmarineCount + cpuCruiserCount + cpuBattleshipCount + cpuCarrierCount) === 50) {
-            infoDisplay.innerHTML = "Computer win"
+            infoDisplay.innerHTML = `${enemy.toUpperCase()} WINS`
             gameOver();
         }
     };

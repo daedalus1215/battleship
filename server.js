@@ -84,5 +84,5 @@ io.on('connection', socket => {
         connections[playerIndex] = null;
         socket.emit('timeout');
         socket.disconnect();
-    }, 60000); 
+    }, 600000); 
 })

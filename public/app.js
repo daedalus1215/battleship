@@ -139,23 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const playGameMulti = (socket) => {
-        if (isGameOver) return;
-        if (!ready) {
-            socket.emit('player-ready');
-            ready = true;
-            playerReady(playerNum)
-        }
-        if (enemyReady) {
-            if (currentPlayer === CURRENT_PLAYER_TURN) {
-                turnDisplay.innerHTML = 'Your Go';
-            }
-            if (currentPlayer === ENEMY_PLAYER_TURN) {
-                turnDisplay.innerHTML = "Enemy's Go";
-            }
-        }
-    };
-
     const playerReady = num => {
         let player = `.p${parseInt(num) + 1}`
         console.log('player is ready ', player);
@@ -316,6 +299,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
                     userSquares[newLocation].classList.add('taken', shipName);
                 })
+            // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
+            // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
+            // the ship will rebound back to the displayGrid.
         } else if (!isHorizontal && !newNotAllowedVertical.includes(shipLastId)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
@@ -338,8 +324,25 @@ document.addEventListener('DOMContentLoaded', () => {
     userSquares.forEach(square => square.addEventListener('dragend', dragEnd));
 
 
+    // game logic for MultiPlayer
+    const playGameMulti = (socket) => {
+        if (isGameOver) return;
+        if (!ready) {
+            socket.emit('player-ready');
+            ready = true;
+            playerReady(playerNum);
+        }
+        if (enemyReady) {
+            if (currentPlayer === CURRENT_PLAYER_TURN) {
+                turnDisplay.innerHTML = 'Your Go';
+            }
+            if (currentPlayer === ENEMY_PLAYER_TURN) {
+                turnDisplay.innerHTML = "Enemy's Go"
+            }
+        }
+    };
 
-    // game logic
+    // game logic for SinglePlayer
     const playGameSingle = () => {
         if (isGameOver) return;
         if (currentPlayer === CURRENT_PLAYER_TURN) {
@@ -350,8 +353,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }))
         }
         if (currentPlayer === ENEMY_PLAYER_TURN) {
-            turnDisplay.innerHTML = `Enemy's go`
-            setTimeout(enemyGo, 500);
+            turnDisplay.innerHTML = "Computer's go";
+            setTimeout(enemyGo, 1000);
         }
     }
 
@@ -365,8 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const enemySquare = computerGrid.querySelector(`div[data-id='${shotFired}']`);
         const obj = Object.values(classList);
         if (!enemySquare.classList.contains('boom') && currentPlayer === CURRENT_PLAYER_TURN && !isGameOver) {
-
-            if (obj.includes('boom') || obj.includes('miss')) return;
+            // if (obj.includes('boom') || obj.includes('miss')) return;
             if (obj.includes('destroyer')) destroyerCount++;
             if (obj.includes('submarine')) submarineCount++;
             if (obj.includes('cruiser')) cruiserCount++;
@@ -379,8 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             enemySquare.classList.add('miss');
         }
+        checkForWins();
         currentPlayer = ENEMY_PLAYER_TURN;
-        turnDisplay.innerHTML = `Enemy's Go`;
         if (gameMode === 'singlePlayer') playGameSingle();
     };
 
@@ -393,22 +395,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const enemyGo = (square) => {
         if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length);
         if (!userSquares[square].classList.contains('boom')) {
+            userSquares[square].classList.add('boom');
             if (userSquares[square].classList.contains('destroyer')) cpuDestroyerCount++;
             if (userSquares[square].classList.contains('submarine')) cpuSubmarineCount++;
             if (userSquares[square].classList.contains('cruiser')) cpuCruiserCount++;
             if (userSquares[square].classList.contains('battleship')) cpuBattleshipCount++;
             if (userSquares[square].classList.contains('carrier')) cpuCarrierCount++;
-            if (userSquares[square].classList.contains('taken')) {
-                userSquares[square].classList.add('boom');
-            } else {
-                userSquares[square].classList.add('miss');
-            }
             checkForWins();
         } else if (gameMode === 'singlePlayer') enemyGo();
 
         currentPlayer = CURRENT_PLAYER_TURN;
         turnDisplay.innerHTML = `Enemy's Go`;
-        playGameSingle();
     }
 
 
@@ -471,7 +468,4 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true;
         startButton.removeEventListener('click', playGameSingle);
     }
-
-
-
 }); 

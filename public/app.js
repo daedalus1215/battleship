@@ -17,15 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
-    const singlePlayerButton = document.querySelector('#singlePlayerButton');
-    const multiPlayerButton = document.querySelector('#multiPlayerButton');
+
 
     // game logic
     let isGameOver = false;
     let currentPlayer = 'user';
 
     const width = 10;
-    let gameMode = "";
     let playerNum = 0; // @TODO: Similar to playerNumber, we need to move this
     let ready = false;
     let enemyReady = false;
@@ -37,24 +35,98 @@ document.addEventListener('DOMContentLoaded', () => {
     let draggedShip;
     let draggedShipLength;
 
-    // Select Player Mode
-    singlePlayerButton.addEventListener("click", () => {
-        gameMode = "singlePlayer";
+    const generateShip = (ship, squares) => {
+        let randomDirection = Math.abs(Math.floor(Math.random() * ship.directions.length));
+        let current = ship.directions[randomDirection];
 
+        if (randomDirection === 0) direction = 1;
+        if (randomDirection === 1) direction = 10;
+
+        let randomStart = Math.abs(Math.floor((Math.random() * squares.length) - (ship.directions[0].length * direction)));
+
+        const isTaken = current.some(index => squares[randomStart + index].classList.contains('taken'));
+        const isAtRightEdge = current.some(index => (randomStart + index) % width === width - 1);
+        const isAtLeftEdge = current.some(index => (randomStart + index) % width === 0);
+
+        if (!isTaken && !isAtRightEdge && !isAtLeftEdge) {
+            current.forEach(index => {
+                squares[randomStart + index].classList.add('taken', ship.name);
+            });
+        } else {
+            generateShip(ship, squares);
+        }
+    };
+
+    const playerReady = num => {
+        let player = `.p${parseInt(num) + 1}`
+        console.log('player is ready ', player);
+        document.querySelector(`${player} .ready span`).classList.toggle('green');
+    }
+
+    const createBoard = (grid) => {
+        const squareCount = 100;
+
+        return Array(squareCount).fill()
+            .map((_, iteration) => {
+                let square = document.createElement('div');
+                square.dataset.id = iteration;
+                grid.appendChild(square);
+                return square;
+            });
+    };
+
+    const ships = [
+        {
+            name: 'destroyer',
+            directions: [
+                [0, 1],
+                [0, width]
+            ]
+        },
+        {
+            name: 'submarine',
+            directions: [
+                [0, 1, 2],
+                [0, width, width * 2]
+            ]
+        },
+        {
+            name: 'cruiser',
+            directions: [
+                [0, 1, 2],
+                [0, width, width * 2]
+            ]
+        },
+        {
+            name: 'battleship',
+            directions: [
+                [0, 1, 2, 3],
+                [0, width, width * 2, width * 3]
+            ]
+        },
+        {
+            name: 'carrier',
+            directions: [
+                [0, 1, 2, 3, 4],
+                [0, width, width * 2, width * 3, width * 4]
+            ]
+        }
+    ];
+
+    const userSquares = createBoard(userGrid);
+    const computerSquares = createBoard(computerGrid);
+
+    // Select Player Mode
+    const startSinglePlayer = () => {
         generateShip(ships[0], computerSquares);
         generateShip(ships[1], computerSquares);
         generateShip(ships[2], computerSquares);
         generateShip(ships[3], computerSquares);
         generateShip(ships[4], computerSquares);
-
-        startButton.addEventListener('click', playGameSingle);
-    });
-
-    multiPlayerButton.addEventListener("click", startMultiPlayer);
+    };
 
     // Multiplayer
-    function startMultiPlayer() {
-        gameMode = 'multiPlayer'
+    const startMultiPlayer = () => {
 
         const socket = io();
 
@@ -139,86 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const playerReady = num => {
-        let player = `.p${parseInt(num) + 1}`
-        console.log('player is ready ', player);
-        document.querySelector(`${player} .ready span`).classList.toggle('green');
+    if (gameMode === 'singlePlayer') {
+        startSinglePlayer();
+    } else {
+        startMultiPlayer();
     }
-
-    const createBoard = (grid) => {
-        const squareCount = 100;
-
-        return Array(squareCount).fill()
-            .map((_, iteration) => {
-                let square = document.createElement('div');
-                square.dataset.id = iteration;
-                grid.appendChild(square);
-                return square;
-            });
-    };
-
-    const ships = [
-        {
-            name: 'destroyer',
-            directions: [
-                [0, 1],
-                [0, width]
-            ]
-        },
-        {
-            name: 'submarine',
-            directions: [
-                [0, 1, 2],
-                [0, width, width * 2]
-            ]
-        },
-        {
-            name: 'cruiser',
-            directions: [
-                [0, 1, 2],
-                [0, width, width * 2]
-            ]
-        },
-        {
-            name: 'battleship',
-            directions: [
-                [0, 1, 2, 3],
-                [0, width, width * 2, width * 3]
-            ]
-        },
-        {
-            name: 'carrier',
-            directions: [
-                [0, 1, 2, 3, 4],
-                [0, width, width * 2, width * 3, width * 4]
-            ]
-        }
-    ];
-
-    const userSquares = createBoard(userGrid);
-    const computerSquares = createBoard(computerGrid);
-
-    const generateShip = (ship, squares) => {
-        let randomDirection = Math.abs(Math.floor(Math.random() * ship.directions.length));
-        let current = ship.directions[randomDirection];
-
-        if (randomDirection === 0) direction = 1;
-        if (randomDirection === 1) direction = 10;
-
-        let randomStart = Math.abs(Math.floor((Math.random() * squares.length) - (ship.directions[0].length * direction)));
-
-        const isTaken = current.some(index => squares[randomStart + index].classList.contains('taken'));
-        const isAtRightEdge = current.some(index => (randomStart + index) % width === width - 1);
-        const isAtLeftEdge = current.some(index => (randomStart + index) % width === 0);
-
-        if (!isTaken && !isAtRightEdge && !isAtLeftEdge) {
-            current.forEach(index => {
-                squares[randomStart + index].classList.add('taken', ship.name);
-            });
-        } else {
-            generateShip(ship, squares);
-        }
-    };
 
     //@TODO: Can do this more gracefully
     const rotate = () => {

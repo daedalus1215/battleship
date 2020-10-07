@@ -102,98 +102,66 @@ btn:focus {
 }
 
 .grid-display {
-  width: 400px;
-  height: 400px;
-  margin: 20px;
-  background-color: turquoise;
-}
-
-.destroyer-container {
-  width: 80px;
-  height: 40px;
-  background-color: orange;
-  margin: 10px;
   display: flex;
-}
-
-.destroyer-container-vertical {
-  width: 40px;
-  height: 80px;
-  background-color: orange;
-  margin: 10px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.submarine-container {
-  width: 120px;
-  height: 40px;
-  background-color: pink;
-  margin: 10px;
-  display: flex;
-}
-
-.submarine-container-vertical {
-  width: 40px;
-  height: 120px;
-  background-color: pink;
-  margin: 10px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.cruiser-container {
-  width: 120px;
-  height: 40px;
-  background-color: purple;
-  margin: 10px;
-  display: flex;
-}
-
-.cruiser-container-vertical {
-  width: 40px;
-  height: 120px;
-  background-color: purple;
-  margin: 10px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.battleship-container {
-  width: 160px;
-  height: 40px;
-  background-color: azure;
-  margin: 10px;
-  display: flex;
-}
-.battleship-container-vertical {
-  width: 40px;
-  height: 160px;
-  background-color: azure;
-  margin: 10px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.carrier-container {
-  width: 200px;
-  height: 40px;
-  background-color: green;
-  margin: 10px;
-  display: flex;
-}
-.carrier-container-vertical {
-  width: 40px;
-  height: 200px;
-  background-color: green;
-  margin: 10px;
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .ship div {
-  width: 40px;
-  height: 40px;
+  width: 4.6vmin;
+  height: 4.6vmin;
+}
+
+.ship {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 1vmin;
+  width: calc(4.6vmin * var(--width, 1));
+  height: calc(4.6vmin * var(--height, 1));
+  border-radius: 2.3vmin;
+}
+
+.destroyer-container {
+  --width: 2;
+}
+
+.destroyer-container-vertical {
+  --height: 2;
+  --width: 1;
+}
+
+.submarine-container {
+  --width: 3;
+}
+
+.submarine-container-vertical {
+  --height: 3;
+  --width: 1;
+}
+
+.cruiser-container {
+  --width: 3;
+}
+
+.cruiser-container-vertical {
+  --height: 3;
+  --width: 1;
+}
+
+.battleship-container {
+  --width: 4;
+}
+
+.battleship-container-vertical {
+  --height: 4;
+  --width: 1;
+}
+
+.carrier-container {
+  --width: 5;
+}
+
+.carrier-container-vertical {
+  --height: 5;
+  --width: 1;
 }
 
 .boom {

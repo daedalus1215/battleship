@@ -92,6 +92,15 @@ btn:focus {
   border-bottom-right-radius: 50%;
 }
 
+.taken.start.horizontal {
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+.taken.end.horizontal {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
 .grid-user {
   width: 400px;
   height: 400px;

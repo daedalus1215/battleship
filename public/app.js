@@ -293,8 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isHorizontal && !newNotAllowedHorizontal.includes(shipLastId)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
+                    let directionClass;
+                    if (iteration === 0) directionClass = 'start';
+                    if (iteration === draggedShipLength - 1) directionClass = 'end';
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
-                    userSquares[newLocation].classList.add('taken', shipName);
+                    userSquares[newLocation].classList.add('taken', 'horizontal', directionClass, shipName);
                 })
             // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
             // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
@@ -302,8 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (!isHorizontal && !newNotAllowedVertical.includes(shipLastId)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
+                    let directionClass;
+                    if(iteration === 0) directionClass = 'start';
+                    if(iteration === draggedShipLength-1) directionClass = 'end';
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
-                    userSquares[newLocation].classList.add('taken', shipName);
+                    userSquares[newLocation].classList.add('taken', 'vertical', directionClass, shipName);
                 });
         } else return
 

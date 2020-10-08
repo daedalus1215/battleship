@@ -81,22 +81,27 @@ btn:focus {
 .taken,
 .ship {
   background-color: hsla(0, 0%, 80%);
+  position: relative;
 }
 
-.taken.start.vertical {
+.taken.start.vertical,
+.taken.start.vertical::before {
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
 }
-.taken.end.vertical {
+.taken.end.vertical,
+.taken.end.vertical::before {
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
 }
 
-.taken.start.horizontal {
+.taken.start.horizontal, 
+.taken.start.horizontal::before {
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
 }
-.taken.end.horizontal {
+.taken.end.horizontal,
+.taken.end.horizontal::before {
   border-top-right-radius: 50%;
   border-bottom-right-radius: 50%;
 }
@@ -118,6 +123,31 @@ btn:focus {
   height: 400px;
   display: flex;
   flex-wrap: wrap;
+}
+
+.grid-computer > .taken {
+  background-color: hsl(200, 100%, 50%) !important;
+  border-radius: 0 !important;
+}
+
+.taken.vertical::before,
+.taken.horizontal::before {
+  content: ' ';
+  position: absolute;
+  border: .3vmin solid white;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  right: -1px;
+}
+
+.taken.horizontal::before {
+  border-left: none;
+  border-right: none;
+}
+.taken.vertical::before {
+  border-top: none;
+  border-bottom: none;
 }
 
 .grid-display {

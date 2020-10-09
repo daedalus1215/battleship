@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
 
-
     // game logic
     let isGameOver = false;
     let currentPlayer = 'user';
@@ -116,6 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const userSquares = createBoard(userGrid);
     const computerSquares = createBoard(computerGrid);
 
+    // game logic for SinglePlayer
+    const playGameSingle = () => {
+        if (isGameOver) return;
+        if (currentPlayer === CURRENT_PLAYER_TURN) {
+            turnDisplay.innerHTML = 'Your Go';
+            computerSquares.forEach(square => square.addEventListener('click', (e) => {
+                console.log('shot fired');
+                shotFired = square.dataset.id;
+                revealSquare(square.classList);
+            }))
+        }
+        if (currentPlayer === ENEMY_PLAYER_TURN) {
+            turnDisplay.innerHTML = "Computer's go";
+            setTimeout(enemyGo, 1000);
+        }
+    }
+
     // Select Player Mode
     const startSinglePlayer = () => {
         generateShip(ships[0], computerSquares);
@@ -123,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         generateShip(ships[2], computerSquares);
         generateShip(ships[3], computerSquares);
         generateShip(ships[4], computerSquares);
+        playGameSingle();
     };
 
     // Multiplayer
@@ -182,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Setup event listeners for firing
         computerSquares.forEach(square => {
+            console.log('clicked on square');
             square.addEventListener('click', () => {
                 if (currentPlayer === 'user' && ready && enemyReady) {
                     shotFired = square.dataset.id
@@ -345,21 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // game logic for SinglePlayer
-    const playGameSingle = () => {
-        if (isGameOver) return;
-        if (currentPlayer === CURRENT_PLAYER_TURN) {
-            turnDisplay.innerHTML = 'Your Go';
-            computerSquares.forEach(square => square.addEventListener('click', (e) => {
-                shotFired = square.dataset.id;
-                revealSquare(square.classList);
-            }))
-        }
-        if (currentPlayer === ENEMY_PLAYER_TURN) {
-            turnDisplay.innerHTML = "Computer's go";
-            setTimeout(enemyGo, 1000);
-        }
-    }
 
     let destroyerCount = 0;
     let submarineCount = 0;
@@ -398,12 +401,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const enemyGo = (square) => {
         if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length);
         if (!userSquares[square].classList.contains('boom')) {
-            userSquares[square].classList.add('boom');
             if (userSquares[square].classList.contains('destroyer')) cpuDestroyerCount++;
             if (userSquares[square].classList.contains('submarine')) cpuSubmarineCount++;
             if (userSquares[square].classList.contains('cruiser')) cpuCruiserCount++;
             if (userSquares[square].classList.contains('battleship')) cpuBattleshipCount++;
             if (userSquares[square].classList.contains('carrier')) cpuCarrierCount++;
+            
+            const obj = Object.values(userSquares[square].classList);
+            if (obj.includes('taken')) {
+                userSquares[square].classList.add('boom');
+            } else {
+                userSquares[square].classList.add('miss');
+            }
+
             checkForWins();
         } else if (gameMode === 'singlePlayer') enemyGo();
 

@@ -95,7 +95,7 @@ btn:focus {
   border-bottom-right-radius: 50%;
 }
 
-.taken.start.horizontal, 
+.taken.start.horizontal,
 .taken.start.horizontal::before {
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
@@ -134,7 +134,7 @@ btn:focus {
 .taken.horizontal::before {
   content: ' ';
   position: absolute;
-  border: .3vmin solid white;
+  border: 0.3vmin solid white;
   top: -1px;
   bottom: -1px;
   left: -1px;
@@ -142,12 +142,27 @@ btn:focus {
 }
 
 .taken.horizontal::before {
+  animation: ripplesY 3s linear infinite;
   border-left: none;
   border-right: none;
 }
+
 .taken.vertical::before {
+  animation: ripplesX 3s linear infinite;
   border-top: none;
   border-bottom: none;
+}
+
+@keyframes ripplesX {
+  0% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleX(1.5);
+  }
 }
 
 .grid-display {
@@ -236,7 +251,6 @@ btn:focus {
 span.green {
   background-color: green;
 }
-
 
 .hidden-info {
   font-size: 1.5rem;

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rotateButton = document.querySelector('#rotate');
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
+    const startButtons = document.querySelector('#setup-buttons');
 
     // game logic
     let isGameOver = false;
@@ -139,7 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         generateShip(ships[2], computerSquares);
         generateShip(ships[3], computerSquares);
         generateShip(ships[4], computerSquares);
-        playGameSingle();
+        startButtons.addEventListener('click', () => {
+            startButtons.style.display = 'none';
+            playGameSingle();
+        });
     };
 
     // Multiplayer
@@ -172,7 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('enemy-ready', num => {
             enemyReady = true
             playerReady(num)
-            if (ready) playGameMulti(socket)
+            if (ready) {
+                setupButtons.style.display = 'none';
+                playGameMulti(socket);
+            }
         })
 
         // Check player status
@@ -268,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     const dragStart = e => {
+        console.log('drag starting', e.target); 
         draggedShip = e.target;
         draggedShipLength = e.target.childNodes.length;
     };
@@ -279,6 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragLeave = e => { };
     const dragDrop = e => {
+        console.log('dragDrop, with a ship of: ', draggedShip)
+        console.log('dragDrop, with lastChild: ', draggedShip.lastChild)
         let shipNameWithLastId = draggedShip.lastChild.id;
 
         let shipName = shipNameWithLastId.slice(0, -2); // just get the ship's name
@@ -374,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const enemySquare = computerGrid.querySelector(`div[data-id='${shotFired}']`);
         const obj = Object.values(classList);
         if (!enemySquare.classList.contains('boom') && currentPlayer === CURRENT_PLAYER_TURN && !isGameOver) {
-            // if (obj.includes('boom') || obj.includes('miss')) return;
             if (obj.includes('destroyer')) destroyerCount++;
             if (obj.includes('submarine')) submarineCount++;
             if (obj.includes('cruiser')) cruiserCount++;
@@ -401,18 +410,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const enemyGo = (square) => {
         if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length);
         if (!userSquares[square].classList.contains('boom')) {
+            const hit = userSquares[square].classList.contains('taken');
+            userSquares[square].classList.add(hit ? 'boom' : 'miss');
             if (userSquares[square].classList.contains('destroyer')) cpuDestroyerCount++;
             if (userSquares[square].classList.contains('submarine')) cpuSubmarineCount++;
             if (userSquares[square].classList.contains('cruiser')) cpuCruiserCount++;
             if (userSquares[square].classList.contains('battleship')) cpuBattleshipCount++;
             if (userSquares[square].classList.contains('carrier')) cpuCarrierCount++;
-            
-            const obj = Object.values(userSquares[square].classList);
-            if (obj.includes('taken')) {
-                userSquares[square].classList.add('boom');
-            } else {
-                userSquares[square].classList.add('miss');
-            }
 
             checkForWins();
         } else if (gameMode === 'singlePlayer') enemyGo();

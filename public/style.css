@@ -125,7 +125,8 @@ btn:focus {
   flex-wrap: wrap;
 }
 
-.grid-computer > .taken {
+.grid-computer > .taken,
+.grid-computer > .boom {
   background-color: hsl(200, 100%, 50%) !important;
   border-radius: 0 !important;
 }
@@ -240,21 +241,21 @@ btn:focus {
   --width: 1;
 }
 
+.player {
+  margin: 2vim;
+}
+
 .connected,
 .ready {
   font-weight: normal;
+  opacity: .25;
+  text-decoration: line-through;
 }
 
-.connected span,
-.ready span {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  background-color: red;
-}
-
-span.green {
-  background-color: green;
+.connected.active,
+.ready.active {
+  opacity: 1;
+  text-decoration: none;
 }
 
 .hidden-info {

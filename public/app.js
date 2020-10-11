@@ -283,8 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragLeave = e => { };
     const dragDrop = e => {
-        console.log('dragDrop, with a ship of: ', draggedShip)
-        console.log('dragDrop, with lastChild: ', draggedShip.lastChild)
+        // console.log('dragDrop, with a ship of: ', draggedShip)
+        // console.log('dragDrop, with lastChild: ', draggedShip.lastChild)
         let shipNameWithLastId = draggedShip.lastChild.id;
 
         let shipName = shipNameWithLastId.slice(0, -2); // just get the ship's name

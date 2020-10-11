@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerReady = num => {
         let player = `.p${parseInt(num) + 1}`
         console.log('player is ready ', player);
-        document.querySelector(`${player} .ready span`).classList.toggle('green');
+        document.querySelector(`${player} .ready`).classList.toggle('active');
     }
 
     const createBoard = (grid) => {
@@ -148,9 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Multiplayer
     const startMultiPlayer = () => {
-
         const socket = io();
-
         // Get your player number
         socket.on('player-number', num => {
             if (num === -1) {
@@ -158,9 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 playerNum = parseInt(num)
                 if (playerNum === 1) currentPlayer = "enemy"
-
-                console.log(playerNum)
-
+                // console.log(playerNum)
                 // Get other player status
                 socket.emit('check-players')
             }
@@ -231,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function playerConnectedOrDisconnected(num) {
             let player = `.p${parseInt(num) + 1}`
-            document.querySelector(`${player} .connected span`).classList.toggle('green')
+            document.querySelector(`${player} .connected`).classList.toggle('active')
             if (parseInt(num) === playerNum) document.querySelector(player).style.fontWeight = 'bold'
         }
     }
@@ -357,6 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // game logic for MultiPlayer
     const playGameMulti = (socket) => {
+        startButtons.style.display = 'none';
         if (isGameOver) return;
         if (!ready) {
             socket.emit('player-ready');

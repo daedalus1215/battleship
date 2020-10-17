@@ -277,11 +277,70 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragOver = e => {
         e.preventDefault();
+        console.log('Target id ', e.target.dataset.id);
+
+        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+
+        const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
+
+
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
+        // console.log('Selected Ship Index: ', selectedShipIndex);
+        const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
+
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
+            Array(draggedShipLength).fill()
+                .map((_, iteration) => {
+                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
+                    userSquares[newLocation].classList.add('green');
+                })
+            // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
+            // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
+            // the ship will rebound back to the displayGrid.
+        } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowPos)) {
+            Array(draggedShipLength).fill()
+                .map((_, iteration) => {
+                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
+                    userSquares[newLocation].classList.add('green');
+                });
+        } else return
+
+
     };
     const dragEnter = e => {
         e.preventDefault();
     };
-    const dragLeave = e => { };
+    const dragLeave = e => { 
+        e.preventDefault();
+
+
+        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+
+        const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
+
+
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
+        // console.log('Selected Ship Index: ', selectedShipIndex);
+        const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
+
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
+            Array(draggedShipLength).fill()
+                .map((_, iteration) => {
+                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
+                    userSquares[newLocation].classList.remove('green');
+                })
+            // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
+            // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
+            // the ship will rebound back to the displayGrid.
+        } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowPos)) {
+            Array(draggedShipLength).fill()
+                .map((_, iteration) => {
+                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
+                    userSquares[newLocation].classList.remove('green');
+                });
+        } else return
+
+    };
 
     /**
      * 
@@ -317,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         // console.log('Selected Ship Index: ', selectedShipIndex);
-        const deltaIntendedBowPos  = intendedBowPos - selectedShipIndex;
+        const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
 
         if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()

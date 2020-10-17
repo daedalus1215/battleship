@@ -118,6 +118,11 @@ btn:focus {
   height: 40px;
 }
 
+.green {
+  background-color: green !important;
+  z-index: 1000;
+}
+
 .grid-computer {
   width: 400px;
   height: 400px;

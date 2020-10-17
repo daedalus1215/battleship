@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
-                    userSquares[newLocation].classList.add('green');
+                    userSquares[newLocation].classList.add('ship-hover');
                 })
             // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
             // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
-                    userSquares[newLocation].classList.add('green');
+                    userSquares[newLocation].classList.add('ship-hover');
                 });
         } else return
 
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
-                    userSquares[newLocation].classList.remove('green');
+                    userSquares[newLocation].classList.remove('ship-hover');
                 })
             // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
             // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
-                    userSquares[newLocation].classList.remove('green');
+                    userSquares[newLocation].classList.remove('ship-hover');
                 });
         } else return
 

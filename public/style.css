@@ -118,9 +118,8 @@ btn:focus {
   height: 40px;
 }
 
-.green {
-  background-color: green !important;
-  z-index: 1000;
+.ship-hover {
+  background-color: hsla(0, 0%, 100%, 0.2) !important;
 }
 
 .grid-computer {

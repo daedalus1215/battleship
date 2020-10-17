@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     const dragStart = e => {
-        console.log('drag starting', e.target); 
+        console.log('drag starting', e.target);
         draggedShip = e.target;
         draggedShipLength = e.target.childNodes.length;
     };
@@ -282,39 +282,44 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
     };
     const dragLeave = e => { };
+
+    /**
+     * 
+     * @param {String} intendedHullPos the div id we expect the hull to be dropped at.
+     * @param {String} shipNameAndBowId the ship name and bow id in a format of: "shipName-bowId", e.g.: "carrier-2".
+     */
+    const getShipNameLengthAndIntendedBowPosition = (intendedHullPos, shipNameAndBowId) => {
+        const shipName = shipNameAndBowId.slice(0, -2);
+        const lengthOfShip = parseInt(shipNameAndBowId.substr(-1));
+        const intendedBowPos = lengthOfShip + parseInt(intendedHullPos);
+
+        return { shipName, lengthOfShip, intendedBowPos };
+    }
+
+    /**
+     * 
+     * @param {String} lengthOfShip the length of the ship, so we can figure out where it can and cannot go.
+     */
+    const getNotAllowedHorizontalAndVerticalLocations = (lengthOfShip) => {
+        const notAllowedHorizontal = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 2, 22, 32, 42, 52, 62, 72, 82, 92, 3, 13, 23, 33, 43, 53, 63, 73, 83, 93]
+        const notAllowedVertical = [99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60]
+        const newNotAllowedHorizontal = notAllowedHorizontal.splice(0, 10 * lengthOfShip);
+        const newNotAllowedVertical = notAllowedVertical.splice(0, 10 * lengthOfShip);
+
+        return { newNotAllowedHorizontal, newNotAllowedVertical };
+    }
+
     const dragDrop = e => {
-        // console.log('dragDrop, with a ship of: ', draggedShip)
-        // console.log('dragDrop, with lastChild: ', draggedShip.lastChild)
-        let shipNameWithLastId = draggedShip.lastChild.id;
+        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
 
-        let shipName = shipNameWithLastId.slice(0, -2); // just get the ship's name
-        // console.log('Ship Name: ', shipName);
-        let lastShipIndex = parseInt(shipNameWithLastId.substr(-1));
-        // console.log('last ship index: ', lastShipIndex);
-        let shipLastId = lastShipIndex + parseInt(e.target.dataset.id);
-        // console.log('ship last id: ', shipLastId);
-        const notAllowedHorizontal = [
-            0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
-            1, 11, 21, 31, 41, 51, 61, 71, 81, 91,
-            2, 12, 22, 32, 42, 52, 62, 72, 82, 92,
-            3, 13, 23, 33, 43, 53, 63, 73, 83, 93
-        ];
-        const notAllowedVertical = [
-            99, 98, 97, 96, 95, 94, 93, 92, 91, 90,
-            89, 88, 87, 86, 85, 84, 83, 82, 81, 80,
-            79, 78, 77, 76, 75, 74, 73, 72, 71, 70,
-            69, 68, 67, 66, 65, 64, 63, 62, 61, 60
-        ];
+        const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
-        const newNotAllowedHorizontal = notAllowedHorizontal.splice(0, 10 * lastShipIndex);
-        const newNotAllowedVertical = notAllowedVertical.splice(0, 10 * lastShipIndex);
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         // console.log('Selected Ship Index: ', selectedShipIndex);
-        shipLastId = shipLastId - selectedShipIndex;
-        // console.log('ship last id: ', shipLastId);
+        const deltaIntendedBowPos  = intendedBowPos - selectedShipIndex;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(shipLastId)) {
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     let directionClass;
@@ -326,12 +331,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
             // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
             // the ship will rebound back to the displayGrid.
-        } else if (!isHorizontal && !newNotAllowedVertical.includes(shipLastId)) {
+        } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     let directionClass;
-                    if(iteration === 0) directionClass = 'start';
-                    if(iteration === draggedShipLength-1) directionClass = 'end';
+                    if (iteration === 0) directionClass = 'start';
+                    if (iteration === draggedShipLength - 1) directionClass = 'end';
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + (width * iteration);
                     userSquares[newLocation].classList.add('taken', 'vertical', directionClass, shipName);
                 });

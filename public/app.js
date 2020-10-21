@@ -268,7 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
-        const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
+        const yeah = selectedShipIndex * 10;
+        const deltaIntendedBowPos = intendedBowPos - yeah;
 
         if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()
@@ -293,7 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
-        const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
+        const yeah = selectedShipIndex * 10;
+        const deltaIntendedBowPos = intendedBowPos - yeah;
 
         if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()
@@ -317,7 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Number} currentPartOfShip : represents the current part of the ship, maybe the hull, 1 of the middles, or the bow.
      */
     const getNewVerticalLocation = (useSquareId, currentPartOfShip) => {
-        return parseInt(useSquareId) + (width * currentPartOfShip);
+        const yeah = selectedShipIndex * 10;
+        return (parseInt(useSquareId) - yeah) + (width * currentPartOfShip);
     };
 
     /**
@@ -327,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const getShipNameLengthAndIntendedBowPosition = (intendedHullPos, shipNameAndBowId) => {
         const shipName = shipNameAndBowId.slice(0, -2);
-        const lengthOfShip = parseInt(shipNameAndBowId.substr(-1) - 1);
+        const lengthOfShip = parseInt(shipNameAndBowId.substr(-1));
         const intendedBowPos = lengthOfShip + parseInt(intendedHullPos);
 
         return { shipName, lengthOfShip, intendedBowPos };
@@ -353,8 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const dragDrop = e => {
         const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
+        
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
-        const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
+        const yeah = selectedShipIndex * 10;
+        const deltaIntendedBowPos = intendedBowPos - yeah;
 
         if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()

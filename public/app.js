@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
-                    let newLocation = parseInt(e.target.dataset.id) + (width * iteration);
+                    const newLocation = getNewVerticalLocation(e.target.dataset.id, iteration);
                     userSquares[newLocation]?.classList.add('ship-hover');
                 });
         } else return;
@@ -289,9 +289,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragLeave = e => {
         e.preventDefault();
-        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+        const { lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
-
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
@@ -302,17 +301,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
                     userSquares[newLocation]?.classList.remove('ship-hover');
                 })
-            // As long as the index of the ship you are dragging is not in the newNotAllowedVertical array.
-            // This means that sometimes if you drag the ship by its index-1 or index-2 and so on,
-            // the ship will rebound back to the displayGrid.
         } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
-                    let newLocation = parseInt(e.target.dataset.id) + (width * iteration);
+                    const newLocation = getNewVerticalLocation(e.target.dataset.id, iteration);
                     userSquares[newLocation]?.classList.remove('ship-hover');
                 });
         } else return
 
+    };
+
+    /**
+     * 
+     * @param {String} useSquareId : e.target.dataset.id is really where this value comes from.
+     * @param {Number} currentPartOfShip : represents the current part of the ship, maybe the hull, 1 of the middles, or the bow.
+     */
+    const getNewVerticalLocation = (useSquareId, currentPartOfShip) => {
+        return parseInt(useSquareId) + (width * currentPartOfShip);
     };
 
     /**
@@ -322,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const getShipNameLengthAndIntendedBowPosition = (intendedHullPos, shipNameAndBowId) => {
         const shipName = shipNameAndBowId.slice(0, -2);
-        const lengthOfShip = parseInt(shipNameAndBowId.substr(-1)-1);
+        const lengthOfShip = parseInt(shipNameAndBowId.substr(-1) - 1);
         const intendedBowPos = lengthOfShip + parseInt(intendedHullPos);
 
         return { shipName, lengthOfShip, intendedBowPos };
@@ -348,8 +353,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const dragDrop = e => {
         const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
-
-
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         const deltaIntendedBowPos = intendedBowPos - selectedShipIndex;
 
@@ -369,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     let directionClass;
                     if (iteration === 0) directionClass = 'start';
                     if (iteration === draggedShipLength - 1) directionClass = 'end';
-                    let newLocation = parseInt(e.target.dataset.id) + (width * iteration);
+                    const newLocation = getNewVerticalLocation(e.target.dataset.id, iteration);
                     userSquares[newLocation].classList.add('taken', 'vertical', directionClass, shipName);
                     userSquares[newLocation].classList.remove('ship-hover');
                 });

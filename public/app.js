@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const enemyGo = (square) => {
         if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length);
-        if (!userSquares[square].classList.contains('boom')) {
+        if (!userSquares[square].classList.contains('boom') && !userSquares[square].classList.contains('miss')) {
             const hit = userSquares[square].classList.contains('taken');
             userSquares[square].classList.add(hit ? 'boom' : 'miss');
             if (userSquares[square].classList.contains('destroyer')) cpuDestroyerCount++;

@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (gameMode === 'singlePlayer') enemyGo();
 
         currentPlayer = CURRENT_PLAYER_TURN;
-        turnDisplay.innerHTML = `Enemy's Go`;
+        turnDisplay.innerHTML = `Your Go`;
     }
 
 
@@ -517,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if ((destroyerCount + submarineCount + cruiserCount + battleshipCount + carrierCount) === 50) {
-            infoDisplay.innerHTML = `You win`
+            turnDisplay.innerHTML = `You win`
             gameOver();
         }
         if ((cpuDestroyerCount + cpuSubmarineCount + cpuCruiserCount + cpuBattleshipCount + cpuCarrierCount) === 50) {

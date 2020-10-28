@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             turnDisplay.innerHTML = "Computer's go";
             setTimeout(enemyGo, 1000);
         }
-    }
+    };
 
     // Select Player Mode
     const startSinglePlayer = () => {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         generateShip(ships[4], computerSquares);
 
         startButtons.addEventListener('click', () => {
-            // startButtons.style.display = 'none';
+            startButtons.style.display = 'none';
             playGameSingle();
         });
     };
@@ -386,7 +386,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         displayGrid.removeChild(draggedShip);
-        if (!displayGrid.querySelector('.ship')) allShipsPlaced = true;
+        if (!displayGrid.querySelector('.ship')) {
+            turnDisplay.innerHTML = 'Start Game';
+            allShipsPlaced = true;
+        }
     };
     const dragEnd = e => { };
 

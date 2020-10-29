@@ -200,7 +200,8 @@ btn:focus {
   border-radius: 2.3vmin;
 }
 
-.destroyer-container {
+.destroyer-container,
+.destroyed-destroyer-container {
   --width: 2;
 }
 
@@ -209,7 +210,8 @@ btn:focus {
   --width: 1;
 }
 
-.submarine-container {
+.submarine-container,
+.destroyed-submarine-container {
   --width: 3;
 }
 
@@ -218,7 +220,8 @@ btn:focus {
   --width: 1;
 }
 
-.cruiser-container {
+.cruiser-container,
+.destroyed-cruiser-container {
   --width: 3;
 }
 
@@ -227,7 +230,8 @@ btn:focus {
   --width: 1;
 }
 
-.battleship-container {
+.battleship-container,
+.destroyed-battleship-container {
   --width: 4;
 }
 
@@ -236,7 +240,8 @@ btn:focus {
   --width: 1;
 }
 
-.carrier-container {
+.carrier-container,
+.destroyed-carrier-container {
   --width: 5;
 }
 
@@ -245,6 +250,15 @@ btn:focus {
   --width: 1;
 }
 
+.destroyed-carrier-container,
+.destroyed-submarine-container,
+.destroyed-battleship-container,
+.destroyed-cruiser-container,
+.destroyed-destroyer-container {
+  display: none;
+}
+
+
 .player {
   margin: 2vim;
 }
@@ -252,7 +266,7 @@ btn:focus {
 .connected,
 .ready {
   font-weight: normal;
-  opacity: .25;
+  opacity: 0.25;
   text-decoration: line-through;
 }
 

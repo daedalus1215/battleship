@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragOver = e => {
         e.preventDefault();
-        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+        const { lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Number} currentPartOfShip : represents the current part of the ship, maybe the hull, 1 of the middles, or the bow.
      */
     const getNewVerticalLocation = (useSquareId, currentPartOfShip) => {
-        const yeah = selectedShipIndex * 10;
+        const yeah = selectedShipIndex * width;
         return (parseInt(useSquareId) - yeah) + (width * currentPartOfShip);
     };
 
@@ -356,9 +356,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const dragDrop = e => {
         const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
-        
+
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
-        const yeah = selectedShipIndex * 10;
+        const yeah = selectedShipIndex * width;
         const deltaIntendedBowPos = intendedBowPos - yeah;
 
         if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
@@ -431,12 +431,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealSquare = classList => {
         const enemySquare = computerGrid.querySelector(`div[data-id='${shotFired}']`);
         const obj = Object.values(classList);
-        if (!enemySquare.classList.contains('boom') && currentPlayer === CURRENT_PLAYER_TURN && !isGameOver) {
+        if (!enemySquare.classList.contains('boom') && !enemySquare.classList.contains('miss')
+            && currentPlayer === CURRENT_PLAYER_TURN && !isGameOver) {
             if (obj.includes('destroyer')) destroyerCount++;
             if (obj.includes('submarine')) submarineCount++;
             if (obj.includes('cruiser')) cruiserCount++;
             if (obj.includes('battleship')) battleshipCount++;
             if (obj.includes('carrier')) carrierCount++;
+        } else {
+            return;
         }
 
         if (obj.includes('taken')) {
@@ -456,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cpuCarrierCount = 0;
 
     const enemyGo = (square) => {
+        if (isGameOver) return;
         if (gameMode === 'singlePlayer') square = Math.floor(Math.random() * userSquares.length);
         if (!userSquares[square].classList.contains('boom') && !userSquares[square].classList.contains('miss')) {
             const hit = userSquares[square].classList.contains('taken');
@@ -475,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const checkForWins = () => {
-        let enemy = 'computer';
+        let enemy = 'enemy';
         if (gameMode === 'multiPlayer') enemy = 'enemy';
         if (destroyerCount === 2) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s destroyer`

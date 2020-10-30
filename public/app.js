@@ -275,16 +275,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
-        const yeah = selectedShipIndex * 10;
-        const deltaIntendedBowPos = intendedBowPos - yeah;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
+        const yeah = selectedShipIndex * 10;
+        const deltaIntendedBowVerticalPos = intendedBowPos - yeah;        
+        const deltaIntendedBowHorizontalPos = intendedBowPos - selectedShipIndex;
+
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
                     userSquares[newLocation]?.classList.add('ship-hover');
                 })
-        } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowPos)) {
+        } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowVerticalPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = getNewVerticalLocation(e.target.dataset.id, iteration);
@@ -303,8 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         const yeah = selectedShipIndex * 10;
         const deltaIntendedBowPos = intendedBowPos - yeah;
+        const deltaIntendedBowHorizontalPos = intendedBowPos - selectedShipIndex;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
@@ -326,8 +329,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Number} currentPartOfShip : represents the current part of the ship, maybe the hull, 1 of the middles, or the bow.
      */
     const getNewVerticalLocation = (useSquareId, currentPartOfShip) => {
-        const yeah = selectedShipIndex * width;
-        return (parseInt(useSquareId) - yeah) + (width * currentPartOfShip);
+        const verticalLength = selectedShipIndex * width;
+        return (parseInt(useSquareId) - verticalLength) + (width * currentPartOfShip);
     };
 
     /**
@@ -367,8 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         const yeah = selectedShipIndex * width;
         const deltaIntendedBowPos = intendedBowPos - yeah;
+        const deltaIntendedBowHorizontalPos = intendedBowPos - selectedShipIndex;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowPos)) {
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos)) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     let directionClass;

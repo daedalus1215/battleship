@@ -18,7 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
     const startButtons = document.querySelector('#setup-buttons');
-
+    
+    const enemySunkTitle = document.querySelector('#enemy-sunk-title');
+    const sunkDestroyer = document.querySelector('#sunk-destroyer');
+    const sunkSubmarine = document.querySelector('#sunk-submarine');
+    const sunkCruiser = document.querySelector('#sunk-cruiser');
+    const sunkBattleship = document.querySelector('#sunk-battleship');
+    const sunkCarrier = document.querySelector('#sunk-carrier');
+    
     // game logic
     let isGameOver = false;
     let currentPlayer = 'user';
@@ -484,22 +491,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (destroyerCount === 2) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s destroyer`
             destroyerCount = 10;
+
+            enemySunkTitle.style.display = 'block';
+            sunkDestroyer.style.display = 'block';
         }
         if (submarineCount === 3) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s submarine`
             submarineCount = 10;
+
+            enemySunkTitle.style.display = 'block';
+            sunkSubmarine.style.display = 'block';
         }
         if (cruiserCount === 3) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s cruiser`
             cruiserCount = 10;
+            
+            enemySunkTitle.style.display = 'block';
+            sunkCruiser.style.display = 'block';
         }
         if (battleshipCount === 4) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s battleship`
             battleshipCount = 10;
+
+            enemySunkTitle.style.display = 'block';
+            sunkBattleship.style.display = 'block';
         }
         if (carrierCount === 5) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s carrier`
             carrierCount = 10;
+
+            enemySunkTitle.style.display = 'block';
+            sunkCarrier.style.display = 'block';
         }
 
         if (cpuDestroyerCount === 2) {

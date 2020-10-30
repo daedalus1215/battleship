@@ -200,7 +200,8 @@ btn:focus {
   border-radius: 2.3vmin;
 }
 
-.destroyer-container {
+.destroyer-container,
+.destroyed-destroyer-container {
   --width: 2;
 }
 
@@ -209,7 +210,8 @@ btn:focus {
   --width: 1;
 }
 
-.submarine-container {
+.submarine-container,
+.destroyed-submarine-container {
   --width: 3;
 }
 
@@ -218,7 +220,8 @@ btn:focus {
   --width: 1;
 }
 
-.cruiser-container {
+.cruiser-container,
+.destroyed-cruiser-container {
   --width: 3;
 }
 
@@ -227,7 +230,8 @@ btn:focus {
   --width: 1;
 }
 
-.battleship-container {
+.battleship-container,
+.destroyed-battleship-container {
   --width: 4;
 }
 
@@ -236,13 +240,69 @@ btn:focus {
   --width: 1;
 }
 
-.carrier-container {
+.carrier-container,
+.destroyed-carrier-container {
   --width: 5;
 }
 
 .carrier-container-vertical {
   --height: 5;
   --width: 1;
+}
+
+.sunk-ships-container {
+  width: 300px;
+  height: 200px;
+  position: absolute;
+  left: 40px;
+  bottom: -50px;
+}
+
+.sunk-ships {
+  width: 200px;
+  height: 200px;
+}
+
+.sunk {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sunk .ship {
+  width: calc(10px * var(--width));
+  height: 10px;
+}
+
+#enemy-sunk-title {
+  display: none;
+}
+
+#sunk-destroyer,
+#sunk-submarine,
+#sunk-cruiser,
+#sunk-battleship,
+#sunk-carrier {
+  display: none;
+}
+
+.sunk .ship .destroyer-container {
+  --width: 2;
+}
+
+.sunk .ship .submarine-container {
+  --width: 3;
+}
+
+.sunk .ship .cruiser-container {
+  --width: 3;
+}
+
+.sunk .ship .battleship-container {
+  --width: 4;
+}
+
+.sunk .ship .carrier-container {
+  --width: 5;
 }
 
 .player {
@@ -252,7 +312,7 @@ btn:focus {
 .connected,
 .ready {
   font-weight: normal;
-  opacity: .25;
+  opacity: 0.25;
   text-decoration: line-through;
 }
 

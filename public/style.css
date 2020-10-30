@@ -250,14 +250,60 @@ btn:focus {
   --width: 1;
 }
 
-.destroyed-carrier-container,
-.destroyed-submarine-container,
-.destroyed-battleship-container,
-.destroyed-cruiser-container,
-.destroyed-destroyer-container {
+.sunk-ships-container {
+  width: 300px;
+  height: 200px;
+  position: absolute;
+  left: 40px;
+  bottom: -50px;
+}
+
+.sunk-ships {
+  width: 200px;
+  height: 200px;
+}
+
+.sunk {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sunk .ship {
+  width: calc(10px * var(--width));
+  height: 10px;
+}
+
+#enemy-sunk-title {
   display: none;
 }
 
+#sunk-destroyer,
+#sunk-submarine,
+#sunk-cruiser,
+#sunk-battleship,
+#sunk-carrier {
+  display: none;
+}
+
+.sunk .ship .destroyer-container {
+  --width: 2;
+}
+
+.sunk .ship .submarine-container {
+  --width: 3;
+}
+
+.sunk .ship .cruiser-container {
+  --width: 3;
+}
+
+.sunk .ship .battleship-container {
+  --width: 4;
+}
+
+.sunk .ship .carrier-container {
+  --width: 5;
+}
 
 .player {
   margin: 2vim;

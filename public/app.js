@@ -18,14 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const turnDisplay = document.querySelector('#whose-go');
     const infoDisplay = document.querySelector('#info');
     const startButtons = document.querySelector('#setup-buttons');
-    
+
     const enemySunkTitle = document.querySelector('#enemy-sunk-title');
     const sunkDestroyer = document.querySelector('#sunk-destroyer');
     const sunkSubmarine = document.querySelector('#sunk-submarine');
     const sunkCruiser = document.querySelector('#sunk-cruiser');
     const sunkBattleship = document.querySelector('#sunk-battleship');
     const sunkCarrier = document.querySelector('#sunk-carrier');
-    
+
     // game logic
     let isGameOver = false;
     let currentPlayer = 'user';
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         generateShip(ships[3], computerSquares);
         generateShip(ships[4], computerSquares);
 
-        startButtons.addEventListener('click', () => {
+        startButton.addEventListener('click', () => {
             startButtons.style.display = 'none';
             playGameSingle();
         });
@@ -247,6 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const rotate = () => {
+        console.log('ueah');
         destroyer.classList.toggle('destroyer-container-vertical');
         submarine.classList.toggle('submarine-container-vertical');
         cruiser.classList.toggle('cruiser-container-vertical');
@@ -271,19 +272,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragOver = e => {
         e.preventDefault();
-        const { lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
+        const intendedHullPos = parseInt(e.target.dataset.id) - selectedShipIndex;
+        const { lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(intendedHullPos, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
-        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
-
         const yeah = selectedShipIndex * 10;
-        const deltaIntendedBowVerticalPos = intendedBowPos - yeah;        
-        const deltaIntendedBowHorizontalPos = intendedBowPos - selectedShipIndex;
+        const deltaIntendedBowVerticalPos = intendedBowPos - yeah;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos)) {
+        console.log('intended hull position', intendedHullPos);
+        console.log('intended bow position', intendedBowPos);
+
+        if (isHorizontal && !newNotAllowedHorizontal.includes(intendedBowPos) && intendedBowPos <= 99) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
-                    const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
+                    const newLocation = intendedHullPos + iteration;
                     userSquares[newLocation]?.classList.add('ship-hover');
                 })
         } else if (!isHorizontal && !newNotAllowedVertical.includes(deltaIntendedBowVerticalPos)) {
@@ -299,15 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const dragLeave = e => {
         e.preventDefault();
-        const { lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
+        const intendedHullPos = parseInt(e.target.dataset.id) - selectedShipIndex;
+        const { lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(intendedHullPos, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
-        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         const yeah = selectedShipIndex * 10;
         const deltaIntendedBowPos = intendedBowPos - yeah;
         const deltaIntendedBowHorizontalPos = intendedBowPos - selectedShipIndex;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos)) {
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos) && intendedBowPos <= 99) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     const newLocation = parseInt(e.target.dataset.id) - selectedShipIndex + iteration;
@@ -351,7 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {String} lengthOfShip the length of the ship, so we can figure out where it can and cannot go.
      */
     const getNotAllowedHorizontalAndVerticalLocations = (lengthOfShip) => {
-        const notAllowedHorizontal = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 2, 22, 32, 42, 52, 62, 72, 82, 92, 3, 13, 23, 33, 43, 53, 63, 73, 83, 93]
+        const notAllowedHorizontal = [
+            0, 10, 20, 30, 40, 50, 60, 70, 80, 90,
+            1, 11, 21, 31, 41, 51, 61, 71, 81, 91,
+            2, 22, 32, 42, 52, 62, 72, 82, 92, 3,
+            13, 23, 33, 43, 53, 63, 73, 83, 93]
         const notAllowedVertical = [
             99, 98, 97, 96, 95, 94, 93, 92, 91, 90,
             89, 88, 87, 86, 85, 84, 83, 82, 81, 80,
@@ -364,15 +372,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const dragDrop = e => {
-        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(e.target.dataset.id, draggedShip.lastChild.id);
+        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
+        const intendedHullPos = parseInt(e.target.dataset.id) - selectedShipIndex;
+        const { shipName, lengthOfShip, intendedBowPos } = getShipNameLengthAndIntendedBowPosition(intendedHullPos, draggedShip.lastChild.id);
         const { newNotAllowedHorizontal, newNotAllowedVertical } = getNotAllowedHorizontalAndVerticalLocations(lengthOfShip);
 
-        selectedShipIndex = parseInt(selectedShipNameWithIndex.substr(-1));
         const yeah = selectedShipIndex * width;
         const deltaIntendedBowPos = intendedBowPos - yeah;
-        const deltaIntendedBowHorizontalPos = intendedBowPos - selectedShipIndex;
+        const deltaIntendedBowHorizontalPos = intendedBowPos;
 
-        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos)) {
+        if (isHorizontal && !newNotAllowedHorizontal.includes(deltaIntendedBowHorizontalPos) && intendedBowPos <= 99) {
             Array(draggedShipLength).fill()
                 .map((_, iteration) => {
                     let directionClass;
@@ -509,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cruiserCount === 3) {
             infoDisplay.innerHTML = `You sunk the ${enemy}s cruiser`
             cruiserCount = 10;
-            
+
             enemySunkTitle.style.display = 'block';
             sunkCruiser.style.display = 'block';
         }
